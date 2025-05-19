@@ -1,13 +1,16 @@
+import urllib.request
 from deepface import DeepFace
 import cv2
+import imutils
+import numpy as np
 
-cap = cv2.VideoCapture(0)
+url='IP_WEBCAM_URL/IMAGE.jpg'
 
 while True:
-    ret, frame = cap.read()
-    if not ret:
-        break
-
+    imgpath=urllib.request.urlopen(url)
+    imgnp=np.array(bytearray(imgpath.read()),dtype=np.uint8)
+    frame=cv2.imdecode(imgnp,-1)
+    frame=imutils.resize(frame,width=450)
     try:
         result = DeepFace.analyze(frame, actions=['emotion'], enforce_detection=False)
         emotion = result[0]['dominant_emotion']
